@@ -1,3 +1,6 @@
+<img width="1295" height="480" alt="image" src="https://github.com/user-attachments/assets/d9437035-ec76-4a45-84ee-53a83b055472" />
+
+
 # 🤖 Roushaan Ai ChatBot
 
 A modern and professional AI chatbot UI inspired by ChatGPT, built with **HTML, CSS, and JavaScript**.  
