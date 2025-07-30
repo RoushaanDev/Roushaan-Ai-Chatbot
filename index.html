@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roushaan Ai ChatBot</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --bg:#f5f7fa;
+      --panel:#ffffff;
+      --border:#dcdfe4;
+      --muted:#6b7280;
+      --text:#1e293b;
+      --accent:#0ea5e9;
+      --accent-strong:#0284c7;
+      --bubble:#eef2f6;
+      --shadow:0 8px 30px rgba(0,0,0,.06);
+      --radius:14px;
+      --maxw:980px;
+    }
+    [data-theme="dark"] {
+      --bg:#1a1c1f;
+      --panel:#232529;
+      --border:#35383d;
+      --muted:#9ca3af;
+      --text:#f3f4f6;
+      --bubble:#2f3237;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; height:100%;
+      font-family:'Inter',sans-serif;
+      background:var(--bg); color:var(--text);
+      display:flex; flex-direction:column;
+      transition:background 0.3s, color 0.3s;
+    }
+    /* Header */
+    .appbar{
+      background:var(--panel);
+      border-bottom:1px solid var(--border);
+      box-shadow:var(--shadow);
+    }
+    .appbar-inner{
+      max-width:var(--maxw);
+      margin:auto; padding:12px 16px;
+      display:flex; align-items:center; gap:10px;
+      justify-content:space-between;
+    }
+    .brand{display:flex; align-items:center; gap:8px; font-weight:600; font-size:18px;}
+    .brand i{color:var(--accent)}
+    .top-actions{display:flex; gap:10px;}
+    .toggle-btn{
+      background:var(--panel); color:var(--text); border:1px solid var(--border);
+      border-radius:50%; width:36px; height:36px; display:flex; align-items:center;
+      justify-content:center; cursor:pointer;
+    }
+    .toggle-btn:hover{background:var(--bubble)}
+    /* Layout */
+    .container{
+      display:flex; flex:1; width:100%; max-width:var(--maxw); margin:auto;
+    }
+    .sidebar{
+      width:220px; background:var(--panel); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; padding:10px; overflow:auto;
+    }
+    .sidebar h3{margin:4px 0 10px; font-size:14px; color:var(--muted); font-weight:500;}
+    .history-item{
+      background:var(--bubble); margin-bottom:6px; padding:8px;
+      border-radius:8px; cursor:pointer; font-size:13px; overflow:hidden;
+      white-space:nowrap; text-overflow:ellipsis;
+      transition:background 0.3s, color 0.3s;
+    }
+    .history-item:hover{background:var(--accent); color:#fff;}
+    .chat-area{flex:1; display:flex; flex-direction:column; padding:10px;}
+    .messages{
+      flex:1; overflow:auto;
+      background:var(--panel);
+      border:1px solid var(--border); border-radius:var(--radius);
+      padding:16px; box-shadow:var(--shadow);
+    }
+    .row{display:flex; gap:10px; margin-bottom:14px;}
+    .avatar{
+      width:34px; height:34px; flex-shrink:0;
+      border-radius:50%; background:#e0f2fe;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; color:var(--accent);
+    }
+    [data-theme="dark"] .avatar{background:#33383f;}
+    .row.user .avatar{background:#eafaf6}
+    .bubble{
+      background:var(--bubble); padding:12px 14px; border-radius:12px;
+      border:1px solid var(--border); max-width:80%;
+      white-space:pre-wrap; word-wrap:break-word;
+    }
+    .row.user .bubble{background:#dcfce7; border-color:#bbf7d0;}
+    /* Composer */
+    .composer{
+      display:flex; align-items:center; gap:8px;
+      margin-top:12px;
+      background:var(--panel);
+      border:1px solid var(--border); border-radius:var(--radius);
+      padding:8px; box-shadow:var(--shadow);
+    }
+    textarea{
+      flex:1; border:none; resize:none;
+      font:inherit; padding:10px; outline:none;
+      min-height:40px; max-height:150px;
+    }
+    .tool-btn{
+      width:38px; height:38px;
+      background:var(--bubble);
+      border:1px solid var(--border); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; color:var(--muted);
+      transition:all 0.3s;
+    }
+    .tool-btn:hover{background:var(--accent); color:#fff;}
+    .tool-btn.active{background:#bae6fd; color:var(--accent); border-color:var(--accent);}
+    .send-btn{
+      background:var(--accent); color:#fff;
+      border:none; border-radius:50%;
+      width:44px; height:44px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px;
+      transition:background 0.3s;
+    }
+    .send-btn:hover{background:var(--accent-strong)}
+    /* Footer */
+    footer{
+      background:var(--panel);
+      border-top:1px solid var(--border);
+      padding:12px 16px;
+      text-align:center;
+      font-size:13px;
+      color:var(--muted);
+      box-shadow:var(--shadow);
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <header class="appbar">
+    <div class="appbar-inner">
+      <div class="brand"><i class="fa-solid fa-robot"></i> Roushaan Ai Chatbot</div>
+      <div class="top-actions">
+        <button id="themeToggle" class="toggle-btn"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar" id="sidebar">
+      <h3>History</h3>
+      <div id="historyList"></div>
+    </aside>
+    <div class="chat-area">
+      <div id="messages" class="messages"></div>
+      <div class="composer">
+        <button id="uploadBtn" class="tool-btn" title="Upload image">
+          <i class="fa-solid fa-image"></i>
+        </button>
+        <input id="fileInput" type="file" accept="image/*" style="display:none"/>
+        <button id="micBtn" class="tool-btn" title="Speak"><i class="fa-solid fa-microphone"></i></button>
+        <textarea id="composerInput" placeholder="Type a message..."></textarea>
+        <button id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; RoushaanOP 2025. All Rights Reserved.
+  </footer>
+
+  <script>
+    const messagesEl = document.getElementById('messages');
+    const composerInput = document.getElementById('composerInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileInput = document.getElementById('fileInput');
+    const micBtn = document.getElementById('micBtn');
+    const themeToggle = document.getElementById('themeToggle');
+    const historyList = document.getElementById('historyList');
+
+    let history = JSON.parse(localStorage.getItem("chatHistory")) || [];
+    let currentChatIndex = null;
+
+    /* History Handling */
+    function saveHistory() {
+      localStorage.setItem("chatHistory", JSON.stringify(history));
+      renderHistory();
+    }
+    function renderHistory() {
+      historyList.innerHTML = "";
+      const newChatBtn = document.createElement('div');
+      newChatBtn.className = 'history-item';
+      newChatBtn.style.fontWeight = "600";
+      newChatBtn.textContent = "➕ New Chat";
+      newChatBtn.addEventListener('click', startNewChat);
+      historyList.appendChild(newChatBtn);
+
+      history.forEach((chat, idx) => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.textContent = chat.title || `Chat ${idx+1}`;
+        item.addEventListener('click', () => loadHistory(idx));
+        historyList.appendChild(item);
+      });
+    }
+    function startNewChat() {
+      messagesEl.innerHTML = "";
+      currentChatIndex = history.length;
+      history.push({ title: "New Chat", messages: [] });
+      saveHistory();
+    }
+    function loadHistory(idx) {
+      messagesEl.innerHTML = "";
+      currentChatIndex = idx;
+      history[idx].messages.forEach(m => addMessage(m.role, m.text));
+    }
+    renderHistory();
+
+    /* Add Message */
+    function addMessage(role, text){
+      const row = document.createElement('div');
+      row.className = 'row ' + (role === 'user' ? 'user' : 'assistant');
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.textContent = role === 'user' ? 'U' : 'AI';
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    /* AI Response */
+    async function fetchAIResponse(prompt) {
+      try {
+        const res = await fetch('https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await res.json();
+        return data.status === 'success' ? data.text : "⚠️ Sorry, I couldn't process that.";
+      } catch (err) {
+        console.error(err);
+        return "⚠️ Error connecting to AI.";
+      }
+    }
+
+    /* Send Message */
+    async function sendMessage(){
+      const text = composerInput.value.trim();
+      if(!text) return;
+      addMessage('user', text);
+      composerInput.value = '';
+
+      if (currentChatIndex === null) startNewChat();
+
+      // Typing indicator
+      const typingRow = document.createElement('div');
+      typingRow.className = 'row assistant';
+      typingRow.innerHTML = `<div class="avatar">AI</div><div class="bubble">Typing...</div>`;
+      messagesEl.appendChild(typingRow);
+
+      const response = await fetchAIResponse(text);
+      typingRow.remove();
+      addMessage('assistant', response);
+
+      history[currentChatIndex].title = history[currentChatIndex].title === "New Chat" 
+          ? text.slice(0, 20) 
+          : history[currentChatIndex].title;
+      history[currentChatIndex].messages.push({ role: 'user', text });
+      history[currentChatIndex].messages.push({ role: 'assistant', text: response });
+      saveHistory();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    composerInput.addEventListener('keydown', e => {
+      if(e.key === 'Enter' && !e.shiftKey){
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    /* Mic and Upload skipped (same as before) */
+
+    /* Dark Mode Toggle */
+    themeToggle.addEventListener('click', () => {
+      const theme = document.body.getAttribute("data-theme");
+      document.body.setAttribute("data-theme", theme === "light" ? "dark" : "light");
+      themeToggle.innerHTML = theme === "light" 
+        ? '<i class="fa-solid fa-sun"></i>' 
+        : '<i class="fa-solid fa-moon"></i>';
+    });
+  </script>
+</body>
+</html>
